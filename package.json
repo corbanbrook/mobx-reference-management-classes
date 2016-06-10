@@ -1,0 +1,22 @@
+{
+  "name": "mobx-models",
+  "version": "0.0.1",
+  "description": "Models for mobx",
+  "main": "index.js",
+  "dependencies": {
+    "mobx": "^2.2.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.9.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-stage-1": "^6.5.0",
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register --watch"
+  },
+  "author": "Corban Riley",
+  "license": "MIT"
+}
