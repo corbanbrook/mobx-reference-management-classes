@@ -1,28 +1,28 @@
 import { assert } from 'chai'
-import { AppStore } from '../src'
+import { AppState } from '../src'
 import { HubsStore, UsersStore, PostsStore } from './stores'
 import initialState from './initialState'
 
 describe('AppStore', () => {
-  const appStore = new AppStore({
+  const appState = new AppState({
     hubs: new HubsStore(),
     users: new UsersStore(),
     posts: new PostsStore()
   })
 
   it('should output JSON of the complete store', () => {
-    appStore.fromJS(initialState)
-    const json = appStore.toJS()
+    appState.fromJS(initialState)
+    const json = appState.toJS()
 
     assert.deepEqual(json, initialState)
   })
 
   it('should translate JSON back into Store', () => {
-    appStore.fromJS(initialState)
+    appState.fromJS(initialState)
 
-    const hub = appStore.stores.hubs.collection[0]
-    const user = appStore.stores.users.collection[0]
-    const post = appStore.stores.posts.collection[0]
+    const hub = appState.stores.hubs.collection[0]
+    const user = appState.stores.users.collection[0]
+    const post = appState.stores.posts.collection[0]
 
     assert.equal(hub, post.hub)
     assert.equal(user, post.user)
