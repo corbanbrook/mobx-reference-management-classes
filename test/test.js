@@ -30,5 +30,6 @@ describe('AppStore', () => {
     assert.equal(hub.user.name, "Corban")
     assert.equal(hub.posts[1].name, "Awesome time")
     assert.equal(hub.posts[1].contributions[0].user.name, "Peter")
+    assert.equal(user.posts[0].name, "The Art of Web Programming")
   })
 })
