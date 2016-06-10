@@ -55,9 +55,11 @@ Taking the following initialState object it will populate the stores and create 
 
   appState.fromJS(initialState)
 
-  appState.stores.users.collection[0].posts.collection[0].title // 'Deep thoughts'
+  appState.stores.users.collection[0].posts[0].title // 'Deep thoughts'
+  appState.stores.users.collection[0].posts[0].comments[0].user.firstName // 'Corban'
 
-  appState.stores.users.collection[0].posts.collection[0].comments.collection[0].user.firstName // 'Corban'
+  appState.stores.comments.collection[0].post.title // 'Deep thoughts'
+  appState.stores.comments.collection[0].user.firstName // 'Corban'
 
 ```
 
