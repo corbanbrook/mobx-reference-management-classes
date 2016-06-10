@@ -11,11 +11,7 @@ export default class AppState {
   }
 
   toJS() {
-    const obj = Object.keys(this.stores).reduce((acc, key) => {
-      acc[key] = toJS(this.stores[key])
-      return acc
-    }, {})
-
+    const obj = toJS(this.stores)
     return JSON.parse(stringify(obj))
   }
 
@@ -42,25 +38,25 @@ const stringify = (obj) => {
       delete result.isChild
 
       if (belongsTo) {
-        belongsTo.forEach((ref) => {
-          if (result[ref]) {
-            result[ref] = {id: val[ref].id}
+        Object.keys(belongsTo).forEach((key) => {
+          if (result[key]) {
+            result[key] = {id: val[key].id}
           }
         })
       }
 
       if (hasMany) {
-        hasMany.forEach((ref) => {
-          if (result[ref]) {
-            delete result[ref]
+        Object.keys(hasMany).forEach((key) => {
+          if (result[key]) {
+            delete result[key]
           }
         })
       }
 
       if (hasOne) {
-        hasOne.forEach((ref) => {
-          if (val[ref]) {
-            val[ref] = undefined
+        Object.keys(hasOne).forEach((key) => {
+          if (result[key]) {
+            delete result[key]
           }
         })
       }

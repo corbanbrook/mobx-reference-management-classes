@@ -16,12 +16,14 @@ export default {
       {
         "type": "user",
         "id": 789,
-        "name": "Corban"
+        "firstName": "Corban",
+        "lastName": "Brook"
       },
       {
         "type": "user",
         "id": 72,
-        "name": "Peter"
+        "firstName": "Peter",
+        "lastName": "Kieltyka"
       }
     ]
   },

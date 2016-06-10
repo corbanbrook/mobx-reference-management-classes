@@ -1,4 +1,8 @@
 export default class Model {
+  static reference(opts) {
+    this.hasManyOpts = opts
+  }
+
   constructor(store, isChild) {
     this.store = store
 
@@ -9,14 +13,14 @@ export default class Model {
     const { hasMany, hasOne } = this.constructor
 
     if (hasMany) {
-      hasMany.forEach((name) => {
-        this[name] = []
+      Object.keys(hasMany).forEach((key) => {
+        this[key] = []
       })
     }
 
     if (hasOne) {
-      hasOne.forEach((name) => {
-        this[name] = null
+      Object.keys(hasOne).forEach((key) => {
+        this[key] = null
       })
     }
   }
@@ -25,39 +29,57 @@ export default class Model {
     const name = this.constructor.name.toLowerCase()
     const pluralizedName = `${name}s`
 
-    const { belongsTo, nested } = this.constructor
+    const { belongsTo, hasMany, hasOne, nested } = this.constructor
 
     if (belongsTo) {
-      // Clear refs collections
-      belongsTo.forEach((ref) => {
-        //console.log("Attempting ref for", this.constructor.name, this.id, ref)
-        if (this[ref]) {
-          //console.log(this[ref])
-          this[ref] = this.store.getStores()[`${ref}s`].collection.find((refItem) => refItem.id == this[ref].id)
+      Object.keys(belongsTo).forEach((key) => {
+        if (this[key]) {
+          const refStore = this.store.getStores()[`${key}s`]
+          const refItem = refStore.getById(this[key].id)
 
-          if (this[ref] && !this.isChild) {
-            const { hasMany, hasOne } = this[ref].constructor
+          if (refItem) {
+            this[key] = refItem
 
-            if (hasMany && hasMany.indexOf(pluralizedName) >= 0) {
-              this[ref][pluralizedName].push(this)
+            if (!this.isChild) {
+              const { hasMany, hasOne } = this[key].constructor
+
+              if (hasMany && hasMany[pluralizedName]) {
+                this[key][pluralizedName].push(this)
+              }
+
+              if (hasOne && hasOne[name] >= 0) {
+                this[key][name] = this
+              }
             }
-
-            if (hasOne && hasOne.indexOf(pluralizedName) >= 0) {
-              this[ref][name] = this
-            }
+          } else {
+            this.store.waitForRef(key, this[key].id, this)
           }
         }
       })
+    }
 
-      if (nested) {
-        nested.forEach((children) => {
-          if (this[children]) {
-            this[children].forEach((child) => {
-              child.buildRefs()
-            })
+    // Connect from the other side
+    if (hasMany) {
+      Object.keys(hasMany).forEach((key) => {
+        const stores = this.store.getStores()
+        Object.keys(stores).forEach((storeKey) => {
+          const refStore = stores[storeKey]
+          const { belongsTo } = refStore.constructor.model
+          if (belongsTo && belongsTo[name]) {
+            refStore.connectRef(name, this)
           }
         })
-      }
+      })
+    }
+
+    if (nested) {
+      Object.keys(nested).forEach((key) => {
+        if (this[key]) {
+          this[key].forEach((nestedItem) => {
+            nestedItem.buildRefs()
+          })
+        }
+      })
     }
   }
 }

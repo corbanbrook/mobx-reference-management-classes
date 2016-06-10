@@ -1,9 +1,13 @@
-import { observable } from 'mobx'
+import { observable, computed } from 'mobx'
 import { Model } from '../src'
 
 export class Hub extends Model {
-  static belongsTo = ['user']
-  static hasMany = ['posts']
+  static belongsTo = {
+    user: {}
+  }
+  static hasMany = {
+    posts: {}
+  }
 
   constructor(data, store) {
     super(store)
@@ -13,7 +17,14 @@ export class Hub extends Model {
 }
 
 export class User extends Model {
-  static hasMany = ['posts', 'hubs']
+  static hasMany = {
+    posts: {},
+    hubs: {}
+  }
+
+  @observable firstName = ""
+  @observable lastName = ""
+  @computed get fullName() { return `${this.firstName} ${this.lastName}` }
 
   constructor(data, store) {
     super(store)
@@ -23,8 +34,14 @@ export class User extends Model {
 }
 
 export class Post extends Model {
-  static belongsTo = ['hub', 'user']
-  static nested = ['children', 'contributions']
+  static belongsTo = {
+    hub: {},
+    user: {}
+  }
+  static nested = {
+    children: {},
+    contributions: {}
+  }
 
   constructor(data, store, isChild) {
     super(store, isChild)
