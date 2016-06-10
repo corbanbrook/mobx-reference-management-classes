@@ -1,8 +1,6 @@
 import { assert } from 'chai'
-import CircularJSON from 'circular-json-es6'
-
-import { AppStore } from '../src/stores'
-import { Model } from '../src/models'
+import { Model } from '../src'
+import { AppStore } from './stores'
 
 
 const stringify = (obj) => {

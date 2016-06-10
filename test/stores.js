@@ -1,5 +1,5 @@
 import { observable, toJS } from 'mobx'
-
+import { Store } from '../src'
 import { Hub, Post, User } from './models'
 
 export class AppStore {
@@ -32,21 +32,6 @@ export class AppStore {
     Object.keys(json).forEach((key) => {
       this.stores[key].buildRefs()
     })
-  }
-}
-
-
-class Store {
-  init(stores) {
-    this.getStores = () => stores
-  }
-
-  fromJS(data) {
-    this.collection = data.collection.map((item) => new this.constructor.model(item, this))
-  }
-
-  buildRefs() {
-    this.collection.forEach((item) => item.buildRefs())
   }
 }
 
