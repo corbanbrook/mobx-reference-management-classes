@@ -1,152 +1,20 @@
 import { assert } from 'chai'
-import { Model } from '../src'
-import { AppStore } from './stores'
-
-
-const stringify = (obj) => {
-  const seen = []
-
-  return JSON.stringify(obj, function(key, val) {
-    if (val instanceof Model) {
-      const { belongsTo, hasMany, hasOne } = val.constructor
-
-      let result = {...val}
-      delete result.store
-      delete result.isChild
-
-      if (belongsTo) {
-        belongsTo.forEach((ref) => {
-          if (result[ref]) {
-            result[ref] = {id: val[ref].id}
-          }
-        })
-      }
-
-      if (hasMany) {
-        hasMany.forEach((ref) => {
-          if (result[ref]) {
-            delete result[ref]
-          }
-        })
-      }
-
-      if (hasOne) {
-        hasOne.forEach((ref) => {
-          if (val[ref]) {
-            val[ref] = undefined
-          }
-        })
-      }
-
-      return result
-    }
-
-    if (val != null && typeof val == "object") {
-      if (seen.indexOf(val) >= 0) {
-        throw new Error(key + " is circular")
-      }
-      seen.push(val)
-    }
-
-    return val
-  })
-}
+import { AppStore } from '../src'
+import { HubsStore, UsersStore, PostsStore } from './stores'
+import initialState from './initialState'
 
 describe('AppStore', () => {
-  const appStore = new AppStore()
-
-  const hubMock = {type: 'hub', id: 123, name: 'My First Hub'}
-  const postMock = {type: 'post', id: 456, name: 'The Art of Web Programming', hub: {id: 123}, user: {id: 789}}
-  const userMock = {type: 'user', id: 789, name: 'Corban'}
-
-  const initialState = {
-    "hubs": {
-      "collection": [
-        {
-          "type": "hub",
-          "id": 123,
-          "name": "My First Hub",
-          "user": {
-            "id": 789
-          }
-        }
-      ]
-    },
-    "users": {
-      "collection": [
-        {
-          "type": "user",
-          "id": 789,
-          "name": "Corban"
-        },
-        {
-          "type": "user",
-          "id": 72,
-          "name": "Peter"
-        }
-      ]
-    },
-    "posts": {
-      "collection": [
-        {
-          "type": "post",
-          "id": 456,
-          "name": "The Art of Web Programming",
-          "hub": {
-            "id": 123
-          },
-          "user": {
-            "id": 789
-          },
-          "children": [
-            {
-              "type": "video",
-              "id": 987,
-              "name": "Best of Youtube 2016",
-              "hub": {
-                "id": 123
-              },
-              "user": {
-                "id": 789
-              }
-            }
-          ],
-          "contributions": []
-        },
-        {
-          "type": "post",
-          "id": 999,
-          "name": "Awesome time",
-          "hub": {
-            "id": 123
-          },
-          "user": {
-            "id": 789
-          },
-          "children": [],
-          "contributions": [
-            {
-              "type": "contribution",
-              "id": 929,
-              "user": {
-                "id": 72
-              },
-              "body": "FUCK YEAH"
-            }
-          ]
-        }
-      ]
-    }
-  }
+  const appStore = new AppStore({
+    hubs: new HubsStore(),
+    users: new UsersStore(),
+    posts: new PostsStore()
+  })
 
   it('should output JSON of the complete store', () => {
     appStore.fromJS(initialState)
+    const json = appStore.toJS()
 
-    const json = stringify(appStore.toJS())
-
-    const obj = JSON.parse(json)
-
-    assert.deepEqual(obj, initialState)
+    assert.deepEqual(json, initialState)
   })
 
   it('should translate JSON back into Store', () => {
