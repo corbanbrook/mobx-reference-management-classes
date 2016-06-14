@@ -94,7 +94,10 @@ This will produce the exact same initialState object as above.
   import { Model } from 'mobx-models'
 
   class User extends Model {
-    static hasMany = ['posts', 'comments']
+    static hasMany = {
+      posts: null,
+      comments: { key: 'id' }
+    }
 
     @observable firstName = ""
     @observable lastName = ""
@@ -103,8 +106,12 @@ This will produce the exact same initialState object as above.
   }
 
   class Post extends Model {
-    static belongsTo = ['user']
-    static hasMany = ['comments']
+    static belongsTo = {
+      user: null
+    }
+    static hasMany = {
+      comments: null
+    }
 
     @observable title = ""
     @observable body = ""
@@ -112,8 +119,13 @@ This will produce the exact same initialState object as above.
   }
 
   class Comment extends Model {
-    static belongsTo = ['user', 'post']
-    static nested = ['children']
+    static belongsTo = {
+      user: null,
+      post: null
+    }
+    static nested = {
+      children: {}
+    }
 
     @observable body = ""
     ...
