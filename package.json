@@ -4,7 +4,7 @@
   "description": "Models for mobx",
   "main": "index.js",
   "dependencies": {
-    "mobx": "^2.2.2"
+    "mobx": "2.3.0"
   },
   "devDependencies": {
     "babel-core": "^6.9.1",

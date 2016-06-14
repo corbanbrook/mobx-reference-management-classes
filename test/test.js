@@ -1,6 +1,7 @@
 import { assert } from 'chai'
 import { AppState } from '../src'
 import { HubsStore, UsersStore, PostsStore } from './stores'
+
 import initialState from './initialState'
 
 describe('AppStore', () => {
@@ -13,7 +14,6 @@ describe('AppStore', () => {
   it('should output JSON of the complete store', () => {
     appState.fromJS(initialState)
     const json = appState.toJS()
-
     assert.deepEqual(json, initialState)
   })
 

@@ -30,12 +30,13 @@ const stringify = (obj) => {
   const seen = []
 
   return JSON.stringify(obj, function(key, val) {
-    if (val instanceof Model) {
-      const { belongsTo, hasMany, hasOne } = val.constructor
+    if (val && val.$refs && val.$refs.modelName) {
+      const { belongsTo, hasMany, hasOne } = val.$refs
 
       let result = {...val}
       delete result.store
       delete result.isChild
+      delete result.$refs
 
       if (belongsTo) {
         Object.keys(belongsTo).forEach((key) => {

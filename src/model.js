@@ -31,6 +31,12 @@ export default class Model {
 
     const { belongsTo, hasMany, hasOne, nested } = this.constructor
 
+    this.$refs = this.$refs || { modelName: this.constructor.name }
+
+    if (belongsTo) this.$refs.belongsTo = JSON.parse(JSON.stringify(belongsTo))
+    if (hasMany) this.$refs.hasMany = JSON.parse(JSON.stringify(hasMany))
+    if (hasOne) this.$refs.hasOne = JSON.parse(JSON.stringify(hasOne))
+
     if (belongsTo) {
       Object.keys(belongsTo).forEach((key) => {
         if (this[key]) {
@@ -41,14 +47,14 @@ export default class Model {
             this[key] = refItem
 
             if (!this.isChild) {
-              const { hasMany, hasOne } = this[key].constructor
+              const { hasMany, hasOne } = refItem.constructor
 
               if (hasMany && hasMany[pluralizedName]) {
-                this[key][pluralizedName].push(this)
+                refItem[pluralizedName].push(this)
               }
 
               if (hasOne && hasOne[name] >= 0) {
-                this[key][name] = this
+                refItem[name] = this
               }
             }
           } else {

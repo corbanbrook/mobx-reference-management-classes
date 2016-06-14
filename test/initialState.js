@@ -9,7 +9,8 @@ export default {
           "id": 789
         }
       }
-    ]
+    ],
+    "current": null
   },
   "users": {
     "collection": [
@@ -25,7 +26,8 @@ export default {
         "firstName": "Peter",
         "lastName": "Kieltyka"
       }
-    ]
+    ],
+    "current": null
   },
   "posts": {
     "collection": [
@@ -76,6 +78,7 @@ export default {
           }
         ]
       }
-    ]
+    ],
+    "current": null
   }
 }
